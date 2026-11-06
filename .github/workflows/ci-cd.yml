@@ -1,0 +1,85 @@
+name: CI/CD Pipeline - Monitor Server & Architecture
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================
+  # 1. CI: Continuous Integration (Lint, Typecheck & Build)
+  # ==========================================
+  ci:
+    name: Build & Verify (CI)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔍 TypeScript Typecheck
+        run: npm run typecheck
+
+      - name: 🏗️ Next.js Production Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NODE_ENV: production
+
+      - name: 📤 Archive Production Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build-artifact
+          path: |
+            .next/
+            public/
+            package.json
+          retention-days: 7
+
+  # ==========================================
+  # 2. CD: Continuous Deployment (Deploy Step)
+  # ==========================================
+  deploy:
+    name: Deploy to Production (CD)
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build-artifact
+          path: .
+
+      - name: 🚀 Deployment Status
+        run: |
+          echo "=================================================="
+          echo "✅ CI Build & Typecheck passed successfully!"
+          echo "🚀 Ready to deploy to your hosting platform (Vercel, Docker, VPS...)"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Author: ${{ github.actor }}"
+          echo "=================================================="
