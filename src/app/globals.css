@@ -6,10 +6,28 @@
   color-scheme: light;
 }
 
+/* Ẩn hoàn toàn tất cả thanh cuộn (scrollbar) trên mọi trình duyệt */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 html,
 body {
-  height: 100%;
-  overflow: hidden;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 body {

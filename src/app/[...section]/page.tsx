@@ -3,7 +3,9 @@ import { NAV } from "@/lib/nav";
 import { EmptyState, Page } from "@/components/ui";
 
 export function generateStaticParams() {
-  return NAV.filter((item) => item.href !== "/").map((item) => ({
+  return NAV.filter(
+    (item) => item.href !== "/" && item.href !== "/server-monitor"
+  ).map((item) => ({
     section: item.href.replace(/^\//, "").split("/"),
   }));
 }

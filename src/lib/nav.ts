@@ -18,6 +18,14 @@ export const NAV: NavItem[] = [
     empty: "",
   },
   {
+    href: "/server-monitor",
+    label: "SSH Monitor",
+    icon: "server",
+    title: "Giám sát Máy chủ Từ xa (SSH Server Monitor)",
+    description: "Kết nối máy chủ qua SSH để theo dõi biểu đồ CPU, GPU, RAM, Ổ cứng và tiến trình theo thời gian thực.",
+    empty: "",
+  },
+  {
     href: "/products",
     label: "Products",
     icon: "products",

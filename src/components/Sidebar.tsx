@@ -10,14 +10,14 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-14 shrink-0 flex-col border-r border-[#9dbdda] bg-[#bcd4ec]">
-      <div className="flex h-14 items-center justify-center border-b border-[#9dbdda]">
+    <aside className="flex h-full w-14 shrink-0 flex-col border-r border-[#9dbdda] bg-[#bcd4ec] overflow-hidden">
+      <div className="flex h-14 shrink-0 items-center justify-center border-b border-[#9dbdda]">
         <span className="grid h-6 w-6 place-items-center rounded bg-zinc-900 text-[11px] font-semibold text-white">
           M
         </span>
       </div>
 
-      <nav aria-label="Điều hướng chính" className="flex-1 overflow-y-auto p-2">
+      <nav aria-label="Điều hướng chính" className="flex-1 overflow-hidden p-2">
         {NAV.map((item) => {
           const active = isActive(pathname, item.href);
           return (

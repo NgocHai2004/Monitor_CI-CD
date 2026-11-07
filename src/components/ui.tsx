@@ -11,7 +11,7 @@ export function Page({
   children?: ReactNode;
 }) {
   return (
-    <div className="flex h-screen flex-col px-5 py-3 overflow-hidden">
+    <div className="flex h-full w-full flex-col px-4 py-2.5 overflow-hidden">
       <header className="mb-2 shrink-0 flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold tracking-tight text-zinc-900 leading-tight">
@@ -61,6 +61,16 @@ const ICON = {
 /** Bộ icon tối giản, vẽ bằng hình học cơ bản — không thêm thư viện icon. */
 export function NavIcon({ name }: { name: string }) {
   switch (name) {
+    case "server":
+      return (
+        <svg {...ICON}>
+          <rect x="3" y="4" width="18" height="6" rx="2" />
+          <rect x="3" y="14" width="18" height="6" rx="2" />
+          <circle cx="7" cy="7" r="1.2" fill="currentColor" />
+          <circle cx="7" cy="17" r="1.2" fill="currentColor" />
+          <path d="M13 7h4M13 17h4" />
+        </svg>
+      );
     case "dashboard":
       return (
         <svg {...ICON}>

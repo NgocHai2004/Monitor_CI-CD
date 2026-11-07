@@ -349,6 +349,7 @@ export function ProductNetworkMap() {
   // Dragging Node
   const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Theme: Nền trắng mặc định
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -463,11 +464,21 @@ export function ProductNetworkMap() {
     }
   };
 
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
-    setScale((prev) => Math.min(2.5, Math.max(0.4, prev * zoomFactor)));
-  };
+  // Lắng nghe sự kiện lăn chuột với passive: false để chặn triệt để hành vi scroll của trình duyệt
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+      setScale((prev) => Math.min(2.5, Math.max(0.4, prev * zoomFactor)));
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   const resetView = () => {
     setScale(1);
@@ -644,12 +655,12 @@ export function ProductNetworkMap() {
 
       {/* KHUNG VẼ BẢN ĐỒ TOÀN MÀN HÌNH (FLEX-1 TỰ ĐỘNG KHỚP CHIỀU CAO KHÔNG CUỘN) */}
       <div
+        ref={containerRef}
         className={`relative flex-1 min-h-0 w-full overflow-hidden rounded-xl border select-none transition-colors duration-200 ${
           isDarkTheme
             ? "border-zinc-900/60 bg-[#090d16] shadow-xl"
             : "border-zinc-200 bg-white shadow-xs"
         }`}
-        onWheel={handleWheel}
       >
         {/* Lưới toạ độ nền */}
         <div
